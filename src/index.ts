@@ -49,10 +49,9 @@ function shouldContinue(state: any) {
     return "__end__";
 }
 
-const agentBuilder = new StateGraph(MessagesAnnotation)
+export const agentBuilder = new StateGraph(MessagesAnnotation)
     .addNode("llmCall", llmCall)
     .addNode("tools", toolNode)
-    // Add edges to connect nodes
     .addEdge("__start__", "llmCall")
     .addConditionalEdges(
         "llmCall",
@@ -64,18 +63,3 @@ const agentBuilder = new StateGraph(MessagesAnnotation)
     )
     .addEdge("tools", "llmCall")
     .compile();
-
-const messages = [{
-    role: "user",
-    content: "Add 31 and 42."
-}];
-
-(async () => {
-    const result = await agentBuilder.invoke({ messages });
-    console.log(result.messages);
-    result.messages.forEach((message: any) => {
-        if (message.role === "assistant") {
-            console.log("AI Message:", message.content);
-        }
-    });
-})();
