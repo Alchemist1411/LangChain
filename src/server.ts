@@ -1,5 +1,6 @@
 import express from 'express';
 import { agentBuilder } from './index';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,28 +12,40 @@ const sessions: { [key: string]: any[] } = {};
 const MESSAGE_LIMIT = 10;
 
 app.post('/api/chat', async (req: any, res: any) => {
-    const { userId, content } = req.body;
+    const { userId, content, threadId } = req.body;
 
     if (!userId || !content) {
         return res.status(400).json({ error: 'UserId and content are required' });
     }
 
-    if (!sessions[userId]) {
-        sessions[userId] = [];
+    let currentThreadId = threadId;
+
+    if (!currentThreadId) {
+        currentThreadId = uuidv4();
     }
 
-    sessions[userId].push({ role: "user", content });
+    if (!sessions[currentThreadId]) {
+        sessions[currentThreadId] = [];
+    }
+
+    sessions[currentThreadId].push({ role: "user", content });
 
     try {
-        console.log(`Messages before invoking agentBuilder for user ${userId}:`, sessions[userId]);
+        console.log(`Messages before invoking agentBuilder for thread ${currentThreadId}:`, sessions[currentThreadId]);
 
-        const result = await agentBuilder.invoke({ messages: sessions[userId] });
+        const result = await agentBuilder.invoke({ messages: sessions[currentThreadId] });
 
-        console.log(`Messages after invoking agentBuilder for user ${userId}:`, result.messages);
+        console.log(`Messages after invoking agentBuilder for thread ${currentThreadId}:`, result.messages);
 
-        sessions[userId] = result.messages.slice(-MESSAGE_LIMIT);
+        const aiMessage = result.messages.find((msg: any) => msg.role === "assistant");
+        if (aiMessage) {
+            sessions[currentThreadId].push({ role: "assistant", content: aiMessage.content });
+        }
 
-        res.json({ messages: result.messages });
+        sessions[currentThreadId] = sessions[currentThreadId].slice(-MESSAGE_LIMIT);
+
+        console.log(`Sending response for thread ${currentThreadId}:`, { threadId: currentThreadId, messages: result.messages });
+        res.json({ threadId: currentThreadId, messages: result.messages });
     } catch (error) {
         console.error('Error occurred while processing the request:', error);
         res.status(500).json({ error: 'An error occurred while processing the request' });
