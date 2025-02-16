@@ -1,5 +1,5 @@
 import express from 'express';
-import { agentBuilder } from './index';
+import { agentBuilder } from './ai-node';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
