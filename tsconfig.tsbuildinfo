@@ -1,0 +1,1 @@
+{"root":["./src/ai-node.ts","./src/createinstance.ts","./src/server.ts","./src/toolconfig/alltools.ts","./src/tools/addtool.ts","./src/tools/multiplytool.ts"],"version":"5.7.3"}
