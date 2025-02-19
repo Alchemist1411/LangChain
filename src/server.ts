@@ -1,6 +1,7 @@
 import express from 'express';
 import { agentBuilder } from './ai-node';
 import { v4 as uuidv4 } from 'uuid';
+import TavilySearch from './utils/tavilySearch';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -52,6 +53,19 @@ app.post('/api/chat', async (req: any, res: any) => {
     }
 });
 
+app.post('/api/search', async (req, res) => {
+    const query = req.body.query;
+    try {
+        const result = await TavilySearch.invoke({
+            input: query,
+        });
+        res.json(result);
+    } catch (error) {
+        console.error("Error occurred while processing the request:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
+    console.log(`Service is running on port: ${port}`);
 });
