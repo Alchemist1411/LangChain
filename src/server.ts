@@ -11,15 +11,12 @@ app.use(express.json());
 dotenv.config();
 app.use(cors());
 
-
-
 app.get("/", (req, res) => {
   res.send("The backend is up and running!");
 });
 
 app.use("/v1/agent", agentRouter);
 app.use("/v1/tavily", searchRouter);
-
 
 
 app.listen(port, () => {

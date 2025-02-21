@@ -1,5 +1,5 @@
 
-import { llm } from "../createInstance";
+import llm from "../createInstance";
 import { estimateGas } from "../tools/estimate_gas";
 import { getWalletBalance } from "../tools/get_balance";
 import { sendSonicToken } from "../tools/send_token";
