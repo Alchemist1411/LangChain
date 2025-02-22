@@ -1,21 +1,29 @@
 import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { llmWithTools, toolsByName } from "./toolConfig/allTools";
 import {
+    AIMessage,
     ToolMessage
 } from "@langchain/core/messages";
+
+let toolDataMap: Map<string, string> = new Map();
 
 async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
         {
             role: "system",
-            content: `You are a helpful assistant tasked with performing on-chain actions on etherium blockchain. Use the tools given to you and if required use tavily search and get solutions and always be to the point with your answers`,
+            content: "You are a helpful assistant tasked with performing on-chain actions on the Ethereum blockchain. Use the tools given to you, and if required, use Tavily search to get solutions. Always be to the point with your answers.",
         },
         ...state.messages
     ]);
 
-    return {
-        messages: [result]
+    const aimessage: AIMessage[] = [];
+
+    result.additional_kwargs = {
+        uiType: Array.from(toolDataMap.values()),
+        toolName: Array.from(toolDataMap.keys())
     };
+
+    return { messages: result };
 }
 
 async function toolNode(state: any) {
@@ -36,6 +44,7 @@ async function toolNode(state: any) {
                     }
                 })
             );
+            toolDataMap.set(tool.name, observation.uiType);
         }
     }
 

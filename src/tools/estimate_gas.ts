@@ -20,7 +20,7 @@ const estimateGas = tool(
 
       return {
         uiType: "text",
-        text: `Gas fees: current: ${currentGasPrice}, maxFee: ${maxFeePerGas}, maxPriorityFee: ${maxPriorityFeePerGas} agent chat response`,
+        text: `Gas fees: current: ${currentGasPrice}, maxFee: ${maxFeePerGas}, maxPriorityFee: ${maxPriorityFeePerGas}`,
       };
     } catch (error: any) {
       return {
