@@ -17,7 +17,7 @@ const getWalletBalance = tool(
         walletAddress: walletAddress,
         balance: balanceEther,
       };
-    } catch (error : any) {
+    } catch (error: any) {
       return {
         uiType: "text",
         text: `Failed to get balance for wallet ${walletAddress}: ${error.message}`,
@@ -31,4 +31,4 @@ const getWalletBalance = tool(
   }
 );
 
-export { getWalletBalance };
+export default getWalletBalance;

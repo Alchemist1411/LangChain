@@ -35,4 +35,4 @@ const estimateGas = tool(
   }
 );
 
-export { estimateGas };
+export default estimateGas;

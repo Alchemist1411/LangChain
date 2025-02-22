@@ -1,6 +1,5 @@
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { ethers } from "ethers";
 
 const sendSonicTokenSchema = z.object({
   recipientAddress: z.string().describe("The recipient's wallet address."),
@@ -8,12 +7,12 @@ const sendSonicTokenSchema = z.object({
 });
 
 const sendSonicToken = tool(
-  async ({  recipientAddress, amount }) => {
+  async ({ recipientAddress, amount }) => {
     try {
       return {
-          receiverAddress: recipientAddress,
-          amount: amount,
-          uiType: "customTx",
+        receiverAddress: recipientAddress,
+        amount: amount,
+        uiType: "customTx",
       }
     } catch (error: any) {
       return {
@@ -30,4 +29,4 @@ const sendSonicToken = tool(
 );
 
 
-export { sendSonicToken };
+export default sendSonicToken;

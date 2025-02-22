@@ -8,7 +8,7 @@ async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
         {
             role: "system",
-            content: "You are a helpful assistant tasked with performing arithmetic on a set of inputs."
+            content: `You are a helpful assistant tasked with performing on-chain actions on etherium blockchain. Use the tools given to you and if required use tavily search and get solutions and always be to the point with your answers`,
         },
         ...state.messages
     ]);
@@ -28,8 +28,12 @@ async function toolNode(state: any) {
             const observation = await tool.invoke(toolCall.args);
             results.push(
                 new ToolMessage({
-                    content: observation,
+                    content: observation.text,
                     tool_call_id: toolCall.id,
+                    additional_kwargs: {
+                        toolName: tool.name,
+                        uiType: observation.uiType
+                    }
                 })
             );
         }

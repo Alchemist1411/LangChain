@@ -28,7 +28,7 @@ router.post('/chat', async (req: any, res: any) => {
   let session = await Session.findOne({ threadId: currentThreadId });
 
   if (!session) {
-    session = new Session({ threadId: currentThreadId, messages: [] });
+    session = new Session({ userId, threadId: currentThreadId, messages: [], aiResponses: [] });
   }
 
   session.messages.push({ role: "user", content });
@@ -40,10 +40,7 @@ router.post('/chat', async (req: any, res: any) => {
 
     console.log(`Messages after invoking agentBuilder for thread ${currentThreadId}:`, result.messages);
 
-    const aiMessage = result.messages.find((msg: any) => msg.role === "assistant");
-    if (aiMessage) {
-      session.messages.push({ role: "assistant", content: aiMessage.content });
-    }
+    session.aiResponses.push({ role: "assistant", response: result.messages });
 
     session.messages = session.messages.slice(-MESSAGE_LIMIT);
     await session.save();
@@ -53,56 +50,6 @@ router.post('/chat', async (req: any, res: any) => {
   } catch (error) {
     console.error('Error occurred while processing the request:', error);
     res.status(500).json({ error: 'An error occurred while processing the request' });
-  }
-});
-
-router.post("/dummy_chat", async (req: Request, res: Response) => {
-  const message = req.body.message;
-  try {
-    const responseMessage = {
-      uiType: "text",
-      text: `${message} agent dummy chat response`
-    };
-    res.json({ response: responseMessage });
-  } catch (error: any) {
-    res.status(500).send(`Error: ${error.message}`);
-  }
-});
-
-// Dummy Chart Endpoint – returns data for rendering a chart
-router.post("/dummy_chart", async (req: Request, res: Response) => {
-  const message = req.body.message;
-  try {
-    const responseMessage = {
-      uiType: "chart",
-      text: `Dummy chart response for: ${message}`,
-      output: {
-        chartType: "bar",
-        labels: ["January", "February", "March"],
-        data: [10, 20, 30]
-      }
-    };
-    res.json({ response: responseMessage });
-  } catch (error: any) {
-    res.status(500).send(`Error: ${error.message}`);
-  }
-});
-
-// Dummy Custom Transaction Endpoint – returns details for a custom tx UI
-router.post("/dummy_customTx", async (req: Request, res: Response) => {
-  const message = req.body.message;
-  try {
-    const responseMessage = {
-      uiType: "customTx",
-      text: `Dummy custom transaction response for: ${message}`,
-      output: {
-        receiverAddress: "0x99537334F44E532384Dd503fBB2fDFc4846641d4",
-        amount: "0.01"
-      }
-    };
-    res.json({ response: responseMessage });
-  } catch (error: any) {
-    res.status(500).send(`Error: ${error.message}`);
   }
 });
 
