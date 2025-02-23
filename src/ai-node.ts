@@ -11,7 +11,7 @@ async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
         {
             role: "system",
-            content: "You are a helpful assistant tasked with performing on-chain actions on the Ethereum blockchain. Use the tools given to you, and if required, use Tavily search to get solutions. Always be to the point with your answers.",
+            content: "You are a helpful assistant tasked with performing on-chain actions on the Ethereum blockchain. Use only tools given to you to get solutions. Always be to the point with your answers.",
         },
         ...state.messages
     ]);

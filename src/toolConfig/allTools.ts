@@ -3,9 +3,8 @@ import getSymbol from "../tools/chart";
 import estimateGas from "../tools/estimate_gas";
 import getWalletBalance from "../tools/get_balance";
 import sendSonicToken from "../tools/send_token";
-import getRecentTransactionCount from "../tools/transactionCount";
-import getRecentTransactionHash from "../tools/transactionHash";
+import totalEthSupply from "../tools/totalEthSupply";
 
-export const tools = [getWalletBalance, estimateGas, sendSonicToken, getSymbol, getRecentTransactionHash, getRecentTransactionCount];
+export const tools = [getWalletBalance, estimateGas, sendSonicToken, getSymbol, totalEthSupply];
 export const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
 export const llmWithTools = llm.bindTools(tools);
