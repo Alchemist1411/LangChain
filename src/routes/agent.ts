@@ -45,12 +45,18 @@ router.post('/chat', async (req: any, res: any) => {
     session.messages = session.messages.slice(-MESSAGE_LIMIT);
     await session.save();
 
-    console.log(`Sending response for thread ${currentThreadId}:`, { threadId: currentThreadId, messages: result.messages });
-    res.json({ threadId: currentThreadId, messages: result.messages });
+    const last_message = result.messages[result.messages.length - 1];
+    const ui_type = (last_message.additional_kwargs?.uiType as string[] | undefined)?.[0];
+    console.log("UI Type:", ui_type);
+    const message = last_message.content;
+    
+    res.json({ threadId: currentThreadId, messages: message, uiType: ui_type });
+
   } catch (error) {
     console.error('Error occurred while processing the request:', error);
     res.status(500).json({ error: 'An error occurred while processing the request' });
   }
 });
+
 
 export default router;
