@@ -19,7 +19,7 @@ LangGraph Agent is a Node.js application that leverages LangChain, OpenAI, and v
     npm install
     ```
 
-3. Create a [.env](http://_vscodecontentref_/0) file based on the [.env.example](http://_vscodecontentref_/1) file and fill in the required environment variables.
+3. Create a [.env]() file based on the [.env.example]() file and fill in the required environment variables.
 
 ### Development
 
