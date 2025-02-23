@@ -10,7 +10,7 @@ LangGraph Agent is a Node.js application that leverages LangChain, OpenAI, and v
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/langgraph-agent.git
+    git clone https://github.com/Alchemist1411/LangChain.git
     cd langgraph-agent
     ```
 
