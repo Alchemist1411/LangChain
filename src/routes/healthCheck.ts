@@ -16,7 +16,7 @@ const pollHealthCheck = () => {
     setInterval(async () => {
         try {
             const response = await axios.get(healthCheckUrl);
-            console.log('Health Check Response:', response.data);
+            console.log(response.data);
         } catch (error) {
             console.error('Health Check Failed:', error);
         }
