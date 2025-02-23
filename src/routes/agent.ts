@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { agentBuilder } from "../ai-node";
 import mongoose from 'mongoose';
@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const router = Router();
-const MESSAGE_LIMIT = 10;
+const MESSAGE_LIMIT = 20;
 
 mongoose.connect(process.env.MONGODB_URI || "");
 
