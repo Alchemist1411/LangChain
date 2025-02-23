@@ -47,9 +47,11 @@ router.post('/chat', async (req: any, res: any) => {
 
     const last_message = result.messages[result.messages.length - 1];
     const ui_type = (last_message.additional_kwargs?.uiType as string[] | undefined)?.[0];
+
     console.log("UI Type:", ui_type);
+
     const message = last_message.content;
-    
+
     res.json({ threadId: currentThreadId, messages: message, uiType: ui_type });
 
   } catch (error) {

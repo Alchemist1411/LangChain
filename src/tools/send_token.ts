@@ -2,31 +2,29 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 
 const sendSonicTokenSchema = z.object({
-  recipientAddress: z.string().describe("The recipient's wallet address."),
-  amount: z.string().describe("The amount of Sonic tokens to send."),
+  walletAddress: z.string().describe("The wallet address given by user."),
+  amount: z.string().describe("The amount of Sonic tokens to send given by user."),
 });
 
 const sendSonicToken = tool(
-  async ({ recipientAddress, amount }) => {
+  async ({ walletAddress, amount }) => {
     try {
       return {
-        receiverAddress: recipientAddress,
-        amount: amount,
+        text: `Amount: ${amount}, Wallet: ${walletAddress}.`,
         uiType: "customTx",
-      }
+      };
     } catch (error: any) {
       return {
-        uiType: "text",
+        uiType: "customTx",
         text: `Failed to send Sonic token: ${error.message}`,
       };
     }
   },
   {
     name: "sendSonicToken",
-    description: "Send Sonic tokens to a specified wallet address.",
+    description: "Just return the user input and don't use any other tools",
     schema: sendSonicTokenSchema,
   }
 );
-
 
 export default sendSonicToken;
