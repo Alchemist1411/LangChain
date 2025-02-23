@@ -6,7 +6,7 @@ import agentRouter from "./routes/agent";
 import healthCheckRouter from "./routes/healthCheck";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 app.use(express.json());
 dotenv.config();
