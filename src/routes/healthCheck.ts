@@ -20,7 +20,7 @@ const pollHealthCheck = () => {
         } catch (error) {
             console.error('Health Check Failed:', error);
         }
-    }, 10 * 60 * 1000);
+    }, 45 * 60 * 1000);
 };
 
 pollHealthCheck();
