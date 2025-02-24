@@ -10,19 +10,23 @@ const sendSonicToken = tool(
   async ({ walletAddress, amount }) => {
     try {
       return {
-        text: `Amount: ${amount}, Wallet: ${walletAddress}.`,
+        text: `${amount}, ${walletAddress}`,
         uiType: "customTx",
+        amount,
+        walletAddress,
       };
     } catch (error: any) {
       return {
         uiType: "customTx",
         text: `Failed to send Sonic token: ${error.message}`,
+        amount,
+        walletAddress,
       };
     }
   },
   {
     name: "sendSonicToken",
-    description: "Just return the user input and don't use any other tools",
+    description: "Just return the amount and wallet address in an object.",
     schema: sendSonicTokenSchema,
   }
 );

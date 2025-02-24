@@ -1,11 +1,12 @@
 import { MessagesAnnotation, StateGraph } from "@langchain/langgraph";
 import { llmWithTools, toolsByName } from "./toolConfig/allTools";
 import {
-    AIMessage,
     ToolMessage
 } from "@langchain/core/messages";
 
 let toolDataMap: Map<string, string> = new Map();
+let walletAddress: string = "";
+let amount: string = "";
 
 async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
@@ -16,11 +17,11 @@ async function llmCall(state: any) {
         ...state.messages
     ]);
 
-    const aimessage: AIMessage[] = [];
-
     result.additional_kwargs = {
         uiType: Array.from(toolDataMap.values()),
-        toolName: Array.from(toolDataMap.keys())
+        toolName: Array.from(toolDataMap.keys()),
+        walletAddress: walletAddress,
+        amount: amount
     };
 
     return { messages: result };
@@ -40,11 +41,15 @@ async function toolNode(state: any) {
                     tool_call_id: toolCall.id,
                     additional_kwargs: {
                         toolName: tool.name,
-                        uiType: observation.uiType
+                        uiType: observation.uiType,
+                        amount: observation.amount,
+                        walletAddress: observation.walletAddress
                     }
                 })
             );
             toolDataMap.set(tool.name, observation.uiType);
+            walletAddress = observation.walletAddress;
+            amount = observation.amount;
         }
     }
 
