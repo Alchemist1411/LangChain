@@ -7,6 +7,8 @@ import {
 let toolDataMap: Map<string, string> = new Map();
 let walletAddress: string = "";
 let amount: string = "";
+let toolcall: any = "";
+let lastToolMessageContent: string = "";
 
 async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
@@ -19,7 +21,7 @@ async function llmCall(state: any) {
 
     result.additional_kwargs = {
         uiType: Array.from(toolDataMap.values()),
-        toolName: Array.from(toolDataMap.keys()),
+        toolCall: toolcall,
         walletAddress: walletAddress,
         amount: amount
     };
@@ -48,6 +50,7 @@ async function toolNode(state: any) {
                 })
             );
             toolDataMap.set(tool.name, observation.uiType);
+            toolcall = { ...toolCall, uiType: observation.uiType }; // Include uiType in toolCall
             walletAddress = observation.walletAddress;
             amount = observation.amount;
         }
