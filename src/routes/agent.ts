@@ -49,14 +49,16 @@ router.post('/chat', async (req: any, res: any) => {
     const tool_names = additional_kwargs.toolName || null;
     const amount = additional_kwargs.amount || null;
     const walletAddress = additional_kwargs.walletAddress || null;
+    const token = additional_kwargs.token || null;
 
     res.json({ 
       threadId: currentThreadId, 
-      messages: last_message.content, 
+      messages: last_message.content,  
       uiType: ui_type, 
       tool_calls: tool_names, 
       amount: amount, 
-      walletAddress: walletAddress 
+      receiverAddress: walletAddress ,
+      token: token
     });
 
   } catch (error) {

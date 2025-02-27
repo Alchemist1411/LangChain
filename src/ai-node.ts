@@ -7,6 +7,7 @@ import {
 let toolDataMap: Map<string, string> = new Map();
 let walletAddress: string = "";
 let amount: string = "";
+let token: string = "";
 
 async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
@@ -21,7 +22,8 @@ async function llmCall(state: any) {
         uiType: Array.from(toolDataMap.values()),
         toolName: Array.from(toolDataMap.keys()),
         walletAddress: walletAddress,
-        amount: amount
+        amount: amount,
+        token: token
     };
 
     return { messages: result };
@@ -43,13 +45,15 @@ async function toolNode(state: any) {
                         toolName: tool.name,
                         uiType: observation.uiType,
                         amount: observation.amount,
-                        walletAddress: observation.walletAddress
+                        walletAddress: observation.walletAddress,
+                        token: observation.token
                     }
                 })
             );
             toolDataMap.set(tool.name, observation.uiType);
             walletAddress = observation.walletAddress;
             amount = observation.amount;
+            token = observation.token;
         }
     }
 
