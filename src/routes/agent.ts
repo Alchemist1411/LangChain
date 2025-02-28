@@ -59,7 +59,8 @@ router.post('/chat', async (req: any, res: any) => {
       uiType: ui_type,
       tool_calls: tool_names,
       amount: amount,
-      walletAddress: walletAddress
+      walletAddress: walletAddress,
+      token: token
     });
 
   } catch (error) {
