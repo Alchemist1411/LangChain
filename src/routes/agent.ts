@@ -4,6 +4,7 @@ import { agentBuilder } from "../ai-node";
 import mongoose from 'mongoose';
 import Session from "../models/schema";
 import dotenv from "dotenv";
+import { ToolMessage } from "@langchain/core/messages"; // Add this import
 
 dotenv.config();
 
@@ -41,24 +42,24 @@ router.post('/chat', async (req: any, res: any) => {
     await session.save();
 
     const last_message = result.messages[result.messages.length - 1];
-    const ui_type = (last_message.additional_kwargs?.uiType as string[] | undefined)?.[0];
     const additional_kwargs = last_message?.additional_kwargs || {};
 
     console.log("Additional Kwargs:", additional_kwargs);
 
-    const tool_names = additional_kwargs.toolName || null;
+    const toolCall = additional_kwargs.toolCall;
+    const tool_names = toolCall && typeof toolCall === 'object' && 'name' in toolCall ? toolCall.name : null;
+    const ui_type = toolCall && typeof toolCall === 'object' && 'uiType' in toolCall ? toolCall.uiType : null;
     const amount = additional_kwargs.amount || null;
     const walletAddress = additional_kwargs.walletAddress || null;
     const token = additional_kwargs.token || null;
 
-    res.json({ 
-      threadId: currentThreadId, 
-      messages: last_message.content,  
-      uiType: ui_type, 
-      tool_calls: tool_names, 
-      amount: amount, 
-      receiverAddress: walletAddress ,
-      token: token
+    res.json({
+      threadId: currentThreadId,
+      messages: last_message.content,
+      uiType: ui_type,
+      tool_calls: tool_names,
+      amount: amount,
+      walletAddress: walletAddress
     });
 
   } catch (error) {
@@ -66,7 +67,6 @@ router.post('/chat', async (req: any, res: any) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 router.post("/dummy_chat", async (req: Request, res: Response) => {
   const content = req.body.content;
@@ -113,7 +113,5 @@ router.post("/dummy_customTx", async (req: Request, res: Response) => {
     res.status(500).send(`Error: ${error.message}`);
   }
 });
-
-
 
 export default router;
