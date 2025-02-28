@@ -1,8 +1,8 @@
 import { tool } from "@langchain/core/tools";
-import { z } from "zod";
+import {  z } from "zod";
 
 const Token = z.object({
-  token: z.string().describe("Token name required for the chart."),
+  token: z.string().describe("The token to search for."),
 });
 
 const getSymbol = tool(
@@ -31,7 +31,7 @@ const getSymbol = tool(
     return {
       uiType: "chart",
       text: `The symbol for ${token} is ${symbol}.`,
-      symbol: symbol,
+      token: symbol
     };
   },
   {

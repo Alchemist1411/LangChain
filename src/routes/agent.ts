@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from 'uuid';
 import { agentBuilder } from "../ai-node";
 import mongoose from 'mongoose';
@@ -51,6 +51,7 @@ router.post('/chat', async (req: any, res: any) => {
     const ui_type = toolCall && typeof toolCall === 'object' && 'uiType' in toolCall ? toolCall.uiType : null;
     const amount = additional_kwargs.amount || null;
     const walletAddress = additional_kwargs.walletAddress || null;
+    const token = additional_kwargs.token || null;
 
     res.json({
       threadId: currentThreadId,
@@ -64,6 +65,52 @@ router.post('/chat', async (req: any, res: any) => {
   } catch (error) {
     console.error('Error occurred while processing the request:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post("/dummy_chat", async (req: Request, res: Response) => {
+  const content = req.body.content;
+  try {
+    const responseMessage = {
+      uiType: "text",
+      messages: `${content} agent dummy chat response`,
+      threadId: "1234"
+    };
+    res.json(responseMessage);
+    console.log("Dummy chat response sent", responseMessage);
+  } catch (error: any) {
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
+// Dummy Chart Endpoint – returns data for rendering a chart
+router.post("/dummy_chart", async (req: Request, res: Response) => {
+  const content = req.body.content;
+  try {
+    const responseMessage = {
+      uiType: "chart",
+      messages: `Dummy chart response for: ${content}`,
+      token: "SONICUSD"
+    };
+    res.json(responseMessage);
+  } catch (error: any) {
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
+// Dummy Custom Transaction Endpoint – returns details for a custom tx UI
+router.post("/dummy_customTx", async (req: Request, res: Response) => {
+  const content = req.body.content;
+  try {
+    const responseMessage = {
+      uiType: "customTx",
+      messages: `Dummy custom transaction response for: ${content}`,
+        receiverAddress: "0x99537334F44E532384Dd503fBB2fDFc4846641d4",
+        amount: "0.01"
+    };
+    res.json(responseMessage);
+  } catch (error: any) {
+    res.status(500).send(`Error: ${error.message}`);
   }
 });
 

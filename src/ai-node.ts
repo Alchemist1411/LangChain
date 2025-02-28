@@ -7,8 +7,10 @@ import {
 let toolDataMap: Map<string, string> = new Map();
 let walletAddress: string = "";
 let amount: string = "";
+let token: string = "";
 let toolcall: any = "";
 let lastToolMessageContent: string = "";
+
 
 async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
@@ -23,7 +25,8 @@ async function llmCall(state: any) {
         uiType: Array.from(toolDataMap.values()),
         toolCall: toolcall,
         walletAddress: walletAddress,
-        amount: amount
+        amount: amount,
+        token: token
     };
 
     return { messages: result };
@@ -45,7 +48,8 @@ async function toolNode(state: any) {
                         toolName: tool.name,
                         uiType: observation.uiType,
                         amount: observation.amount,
-                        walletAddress: observation.walletAddress
+                        walletAddress: observation.walletAddress,
+                        token: observation.token
                     }
                 })
             );
@@ -53,6 +57,7 @@ async function toolNode(state: any) {
             toolcall = { ...toolCall, uiType: observation.uiType }; // Include uiType in toolCall
             walletAddress = observation.walletAddress;
             amount = observation.amount;
+            token = observation.token;
         }
     }
 
