@@ -9,10 +9,17 @@ let walletAddress: string = "";
 let amount: string = "";
 let token: string = "";
 let toolcall: any = "";
-let lastToolMessageContent: string = "";
 
 
 async function llmCall(state: any) {
+    if (state.messages.length === 1 || state.messages[state.messages.length - 1].role === "user") {
+        toolDataMap = new Map();
+        walletAddress = "";
+        amount = "";
+        token = "";
+        toolcall = "";
+    }
+
     const result = await llmWithTools.invoke([
         {
             role: "system",
@@ -54,7 +61,7 @@ async function toolNode(state: any) {
                 })
             );
             toolDataMap.set(tool.name, observation.uiType);
-            toolcall = { ...toolCall, uiType: observation.uiType }; // Include uiType in toolCall
+            toolcall = { ...toolCall, uiType: observation.uiType };
             walletAddress = observation.walletAddress;
             amount = observation.amount;
             token = observation.token;

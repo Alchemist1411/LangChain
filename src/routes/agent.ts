@@ -48,7 +48,7 @@ router.post('/chat', async (req: any, res: any) => {
 
     const toolCall = additional_kwargs.toolCall;
     const tool_names = toolCall && typeof toolCall === 'object' && 'name' in toolCall ? toolCall.name : null;
-    const ui_type = toolCall && typeof toolCall === 'object' && 'uiType' in toolCall ? toolCall.uiType : null;
+    const ui_type = toolCall && typeof toolCall === 'object' && 'uiType' in toolCall ? toolCall.uiType : "text";
     const amount = additional_kwargs.amount || null;
     const walletAddress = additional_kwargs.walletAddress || null;
     const token = additional_kwargs.token || null;
