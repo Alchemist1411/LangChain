@@ -7,6 +7,13 @@ const Token = z.object({
 
 const getSymbol = tool(
   async ({ token }) => {
+    if (token.toLowerCase() === 'sonic') {
+      return {
+        uiType: "chart",
+        text: `The symbol for ${token} is SONICUSD.`,
+        token: 'SONICUSD'
+      };
+    }
     const url = 'https://symbol-search.tradingview.com/symbol_search/';
     const params = new URLSearchParams({
         text: token,

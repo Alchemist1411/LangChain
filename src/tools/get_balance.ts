@@ -13,7 +13,7 @@ const getWalletBalance = tool(
       const balanceEther = ethers.formatEther(balanceWei);
       return {
         uiType: "text",
-        text: `The balance for wallet ${walletAddress} is ${balanceEther} ETH.`,
+        text: `The balance for wallet ${walletAddress} is ${balanceEther} SONIC.`,
         walletAddress: walletAddress,
         balance: balanceEther,
       };
