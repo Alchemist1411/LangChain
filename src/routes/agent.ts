@@ -52,6 +52,7 @@ router.post('/chat', async (req: any, res: any) => {
     const amount = additional_kwargs.amount || null;
     const walletAddress = additional_kwargs.walletAddress || null;
     const token = additional_kwargs.token || null;
+    const trxn = additional_kwargs.trxn || null;
 
     res.json({
       threadId: currentThreadId,
@@ -60,7 +61,8 @@ router.post('/chat', async (req: any, res: any) => {
       tool_calls: tool_names,
       amount: amount,
       walletAddress: walletAddress,
-      token: token
+      token: token,
+      trxn: trxn
     });
 
   } catch (error) {
