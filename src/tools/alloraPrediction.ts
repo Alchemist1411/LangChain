@@ -13,7 +13,7 @@ const alloraPrediction = tool(
       token = token.toLowerCase();
       const inferences = await main(token);
       return {
-        uiType: "text",
+        uiType: "alloraPrediction",
         text: `Successfully Predicted price for ${token} `,
         prediction: inferences,
       };
