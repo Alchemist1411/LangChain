@@ -3,6 +3,7 @@ import { llmWithTools, toolsByName } from "./toolConfig/allTools";
 import {
     ToolMessage
 } from "@langchain/core/messages";
+import { systemPrompt } from "./utils/systemPrompt";
 
 let toolDataMap: Map<string, string> = new Map();
 let walletAddress: string = "";
@@ -23,7 +24,7 @@ async function llmCall(state: any) {
     const result = await llmWithTools.invoke([
         {
             role: "system",
-            content: "You are a helpful assistant tasked with performing on-chain actions on the Ethereum blockchain. Use only tools given to you to get solutions. Always be to the point with your answers.",
+            content: systemPrompt,
         },
         ...state.messages
     ]);
