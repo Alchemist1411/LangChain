@@ -1,51 +1,66 @@
 import { tool } from "@langchain/core/tools";
-import { z } from "zod";
 import axios from "axios";
+import dotenv from "dotenv";
+import { z } from "zod";
 
-const TransactionHistorySchema = z.object({
-  walletAddress: z.string().describe("The wallet address to get transaction history for.")
+dotenv.config();
+
+const transactionSchema = z.object({
+    walletAddress: z.string().describe("The wallet address to get transaction history for."),
 });
 
 const getTransactionHistory = tool(
-  async ({ walletAddress }) => {
-    try {
-      // Define base URL
-      const baseUrl = "https://testnet.sonicscan.org/address/";
-      
-      // Create query parameters
-      const params = new URLSearchParams({
-        address: walletAddress,
-        limit: "10"
-      });
-      
-      // Make the request with dynamic URL
-      const response = await axios.get(`${baseUrl}?${params}`, {
-        headers: {
-          'Accept': 'application/json',
-          // Add any required authorization headers here
+    async ({ walletAddress }) => {
+        const SONIC_SCAN_API_KEY = process.env.SONIC_SCAN_API_KEY || "";
+        const SONIC_SCAN_API_URL = 'https://api-testnet.sonicscan.org/api';
+
+        try {
+            const response = await axios.get(SONIC_SCAN_API_URL, {
+                params: {
+                    module: 'account',
+                    action: 'txlist',
+                    address: walletAddress,
+                    startblock: 0,
+                    endblock: 99999999,
+                    page: 1,
+                    offset: 10,
+                    sort: 'asc',
+                    apikey: SONIC_SCAN_API_KEY
+                }
+            });
+
+            if (response.data.status === '1' && response.data.result.length > 0) {
+                const transactions = response.data.result;
+                const formattedTxs = transactions.map((tx: any, index: number) => {
+                    return `${index + 1}. Hash: ${tx.hash.substring(0, 10)}...
+             From: ${tx.from.substring(0, 10)}...
+             To: ${tx.to.substring(0, 10)}...
+             Value: ${tx.value} SONIC
+             Time: ${new Date(parseInt(tx.timeStamp) * 1000).toLocaleString()}`;
+                }).join('\n\n');
+
+                return {
+                    uiType: "text",
+                    text: `Transaction history for ${walletAddress}:\n\n${formattedTxs}`,
+                };
+            } else {
+                return {
+                    uiType: "text",
+                    text: `No transactions found for wallet ${walletAddress}.`,
+                };
+            }
+        } catch (error: any) {
+            return {
+                uiType: "text",
+                text: `Failed to fetch transaction history: ${error.message}`,
+            };
         }
-      });
-      
-      // Process the response
-      const transactions = response.data;
-      
-      return {
-        uiType: "text", // or "chart" or any other UI type you need
-        text: `Found ${transactions.length} transactions for wallet ${walletAddress}.`,
-        transactions: transactions // Include the transaction data for downstream use
-      };
-    } catch (error: any) {
-      return {
-        uiType: "text",
-        text: `Failed to retrieve transaction history for ${walletAddress}: ${error.message}`
-      };
+    },
+    {
+        name: "getTransactionHistory",
+        description: "Get the transaction history for a specified wallet address on the Sonic blockchain.",
+        schema: transactionSchema,
     }
-  },
-  {
-    name: "getTransactionHistory",
-    description: "Get transaction history for a specific wallet address.",
-    schema: TransactionHistorySchema,
-  }
 );
 
 export default getTransactionHistory;
