@@ -53,6 +53,7 @@ router.post('/chat', async (req: any, res: any) => {
     const walletAddress = additional_kwargs.walletAddress || null;
     const token = additional_kwargs.token || null;
     const trxn = additional_kwargs.trxn || null;
+    const prediction = additional_kwargs.prediction || null;
 
     res.json({
       threadId: currentThreadId,
@@ -62,7 +63,8 @@ router.post('/chat', async (req: any, res: any) => {
       amount: amount,
       walletAddress: walletAddress,
       token: token,
-      trxn: trxn
+      trxn: trxn,
+      prediction: prediction
     });
 
   } catch (error) {
