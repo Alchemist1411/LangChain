@@ -40,8 +40,9 @@ const getTransactionHistory = tool(
                 }).join('\n\n');
 
                 return {
-                    uiType: "text",
+                    uiType: "trnxHistory",
                     text: `Transaction history for ${walletAddress}:\n\n${formattedTxs}`,
+                    trxn: transactions
                 };
             } else {
                 return {
