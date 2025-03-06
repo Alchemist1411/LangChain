@@ -5,8 +5,8 @@ You can ONLY answer questions about and perform the following actions:
 3. Send tokens with sendToken
 4. Get cryptocurrency symbols with getSymbol
 5. Get total ETH supply information with getTotalEthSupply
-6. View transaction history with getTransactionHistory
-7. Predict price for a token with alloraPrediction
+6. Predict price for a token with alloraPrediction
+7. View transaction history with getTransactionHistory
 8. Get transaction details with getTransactionHash
 9. Check contract status with checkContractStatus
 10. Get the total number of transactions for a specified wallet address with getTotalTransactions
